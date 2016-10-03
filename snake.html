@@ -1,0 +1,228 @@
+<html>
+<meta charset="UTF-8">
+<title>贪吃蛇</title>
+<body>
+
+
+<script>
+    var map;//地图
+    var food;//食物
+    var snake;//蛇
+    var sum=0;
+    var timer;
+    var Body=[];
+    function style(node,width,height,position,co,X,Y){
+        node.style.width= width+'px';
+        node.style.height= height+'px';
+        node.style.position= position;
+        node.style.background=co;
+        node.style.left= X *20;
+        node.style.top= Y *20;
+        document.getElementsByTagName('body')[0].appendChild(node);
+
+    }
+    function MAP(){
+        var $map=document.createElement("div");
+        style($map,800,600,'absolute','#eeeeee');
+        //document.getElementsByTagName('body')[0].appendChild($map);
+
+    }
+    var $food=document.createElement("div");
+    var b = '#' + (Math.random() * 0xffffff << 0).toString(16);
+    if(b=='#FFFFFF'||b=='#FFFFCC'||b=='#EEEEEE'){
+        b = '#' + (Math.random() * 0xffffff << 0).toString(16);
+    }
+    var x=Math.floor(Math.random()*800/20);
+    var y=Math.floor(Math.random()*600/20);
+    for(var i=0;i<Body.length;i++){
+        if(x==Body[i][0] && y==Body[i][1]){
+            x=Math.floor(Math.random()*800/20);
+            y=Math.floor(Math.random()*600/20);
+        }
+
+    }
+
+
+    function FOOD(){
+
+        style($food,20,20,'absolute',b,x,y);
+        //document.getElementsByTagName('body')[0].appendChild($food );
+    }
+    var $snake=document.createElement("div");
+    var snakex=Math.floor(Math.random()*800/20);
+    var snakey=Math.floor(Math.random()*600/20);
+
+    Body [0]=[snakex,snakey,'#FFFFCC',null];
+
+    function Snake() {
+        this.show = function () {
+            //style($snake, 20, 20, 'absolute', '#FFFFCC', snakex, snakey);
+            for(var i=0;i<Body.length;i++){
+                if(Body[i][3]==null){
+                    Body[i][3]=document.createElement("div");
+                    Body[i][3].style.width='20px';
+                    Body[i][3].style.height='20px';
+                    Body[i][3].style.position='absolute';
+                    Body[i][3].style.background=Body[i][2];
+                    document.getElementsByTagName('body')[0].appendChild(Body[i][3]);
+
+
+                }
+                Body[i][3].style.left=Body[i][0]*20;
+                Body[i][3].style.top=Body[i][1]*20;
+            }
+
+        }
+        direction = '';
+
+        //添加键盘事件
+        document.onkeydown = function (e) {
+            var e = event || window.event || arguments.callee.caller.arguments[0];
+            switch (e && e.keyCode) {
+                case 37:
+                {
+                    if (direction == 'right') {
+                        break;
+                    }
+                    direction = 'left';
+                    break;
+                }
+                case 38:
+                {
+                    if (direction == 'down') {
+                        break;
+                    }
+                    direction = 'up';
+                    break;
+
+                }
+                case 39:
+                {
+                    if (direction == 'left') {
+                        break;
+                    }
+                    direction = 'right';
+                    break;
+                }
+                case 40:
+                {
+                    if (direction == 'up') {
+                        break;
+                    }
+                    direction = 'down';
+                    break;
+                }
+            }
+        }
+
+        function move() {
+
+            for (var i = Body.length - 1; i > 0; i--) {
+                Body[i][0] = Body[i - 1][0];
+                Body[i][1] = Body[i - 1][1];
+            }
+
+            switch (direction) {
+                case 'left':
+                {
+                    Body[0][0] = Body[0][0] - 1;
+                    break;
+                }
+                case 'up':
+                {
+                    Body[0][1] = Body[0][1] - 1;
+                    break;
+                }
+                case  'right':
+                {
+                    Body[0][0] = Body[0][0] + 1;
+                    break;
+                }
+                case 'down':
+                {
+                    Body[0][1] = Body[0][1] + 1;
+                    break;
+                }
+            }
+            //checkNextStep();
+            //style($snake, 20, 20, 'absolute', '#FFFFCC', Body[0][0], Body[0][1]);
+
+            //timer = setInterval(move, 500);
+
+            if (Body[0][0] < 0 || Body[0][0] > 40 || Body[0][1] < 0 || Body[0][1] > 30) {
+                alert('撞墙死亡!' + ' ' + '分数=' + sum);
+                clearInterval(timer);
+                return;
+            }
+
+            if (Body[0][0] == x && Body[0][1] == y) {
+                sum++;
+                //alert(sum);
+                /* var c = '#' + (Math.random() * 0xffffff << 0).toString(16);
+                 if(c=='#FFFFFF'||c=='#FFFFCC'||c=='#EEEEEE'){
+                 c = '#' + (Math.random() * 0xffffff << 0).toString(16);
+                 }
+                 var xx = Math.floor(Math.random() * 800 / 20);
+                 var yy = Math.floor(Math.random() * 600 / 20);
+                 for(var i=0;i<Body.length;i++){
+                 if(x==Body[i][0] && y==Body[i][1]){
+                 x=Math.floor(Math.random()*800/20);
+                 y=Math.floor(Math.random()*600/20);
+                 }
+
+                 }*/
+                b = '#' + (Math.random() * 0xffffff << 0).toString(16);
+                if(b=='#FFFFFF'||b=='#FFFFCC'||b=='#EEEEEE'){
+                    b = '#' + (Math.random() * 0xffffff << 0).toString(16);
+                }
+                x=Math.floor(Math.random()*800/20);
+                y=Math.floor(Math.random()*600/20);
+                for(var i=0;i<Body.length;i++){
+                    if(x==Body[i][0] && y==Body[i][1]){
+                        x=Math.floor(Math.random()*800/20);
+                        y=Math.floor(Math.random()*600/20);
+                    }
+
+                }
+
+
+                style($food, 20, 20, 'absolute', b, x, y);
+                // b = c;
+                // x = xx;
+                // y = yy;
+                Body.push([x, y, '#FFFFFF', null])
+
+            }
+            for(var i=1;i<Body.length;i++){
+                if(Body[0][0]==Body[i][0] && Body[0][1]==Body[i][1]){
+                    alert('触碰蛇身!' + ' ' + '分数=' + sum);
+                    clearInterval(timer);
+                    return;
+                }
+            }
+            snake.show();
+
+        }
+        timer = setInterval(move, 100);
+
+
+    }
+
+
+
+    window.onload=function()
+    {
+        map = new MAP();
+
+        food= new FOOD();
+
+        snake=new Snake();
+        snake.show();
+
+
+    }
+
+
+</script>
+</body>
+</html>
